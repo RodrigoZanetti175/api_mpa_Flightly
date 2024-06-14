@@ -19,18 +19,18 @@ router.get('/:id', getVoo, (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-    const Voo = new Voo({
+    const voo = new Voo({
       companhia: req.body.companhia,
       aeroportoIda: req.body.aeroportoIda,
-      aeroportoVolta: req.body.aeroportoVolta,
       dataIda: req.body.dataIda,
-      dataVolta: req.body.dataVolta,
       horaIda: req.body.horaIda,
+      aeroportoVolta: req.body.aeroportoVolta,
+      dataVolta: req.body.dataVolta,
       horaVolta: req.body.horaVolta,
     });
   
     try {
-      const newVoo = await Voo.save();
+      const newVoo = await voo.save();
       res.status(201).json(newVoo);
     } catch (err) {
       res.status(400).json({ message: err.message });
