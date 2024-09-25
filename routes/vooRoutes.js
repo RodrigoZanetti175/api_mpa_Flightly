@@ -2,8 +2,13 @@ const express = require('express');
 const router = express.Router();
 const Voo = require('../models/voo.js');
 
+router.use(function(req, res, next){
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+})
 // Rota para obter todos os contatos
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
   try {
     const voos = await Voo.find();
     res.json(voos);
@@ -14,11 +19,11 @@ router.get('/', async (req, res) => {
 
 // Rota para obter um contato por ID
 
-router.get('/:id', getVoo, (req, res) => {
+router.get('/:id', getVoo, (req, res, next) => {
   res.json(res.Voo);
 });
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
     const voo = new Voo({
       companhia: req.body.companhia,
       aeroportoIda: req.body.aeroportoIda,
@@ -37,7 +42,7 @@ router.post('/', async (req, res) => {
     }
   });
 
-router.put('/:id', getVoo, async (req,res) =>{
+router.put('/:id', getVoo, async (req,res,next) =>{
     if (req.Voo.companhia != null){
         res.Voo.companhia = req.body.companhia;
     }
@@ -74,7 +79,7 @@ router.put('/:id', getVoo, async (req,res) =>{
       }
 });
 
-router.delete('/:id', getVoo, async (req, res) => {
+router.delete('/:id', getVoo, async (req, res, next) => {
     try {
       await res.Voo.deleteOne();
       res.json({ message: 'Voo excluído com sucesso!' });
