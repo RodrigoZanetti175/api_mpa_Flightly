@@ -21,7 +21,7 @@ router.get('/', async (req, res, next) => {
 // Rota para obter um contato por ID
 
 router.get('/:id', getVoo, (req, res, next) => {
-  res.json(res.Voo);
+  res.json(res.voo);
 });
 
 router.post('/', async (req, res, next) => {
@@ -44,32 +44,32 @@ router.post('/', async (req, res, next) => {
   });
 
 router.put('/:id', getVoo, async (req,res,next) =>{
-    if (req.Voo.companhia != null){
-        res.Voo.companhia = req.body.companhia;
+    if (req.voo.companhia != null){
+        res.voo.companhia = req.body.companhia;
     }
 
-    if (req.Voo.aeroportoIda != null){
-        res.Voo.aeroportoIda = req.body.aeroportoIda;
+    if (req.voo.aeroportoIda != null){
+        res.voo.aeroportoIda = req.body.aeroportoIda;
     }
 
-    if (req.Voo.aeroportoVolta != null){
-        res.Voo.aeroportoVolta = req.body.aeroportoVolta;
+    if (req.voo.aeroportoVolta != null){
+        res.voo.aeroportoVolta = req.body.aeroportoVolta;
     }
 
-    if (req.Voo.dataIda != null){
-        res.Voo.dataIda = req.body.dataIda;
+    if (req.voo.dataIda != null){
+        res.voo.dataIda = req.body.dataIda;
     }
 
-    if (req.Voo.dataVolta != null){
-        res.Voo.dataVolta = req.body.dataVolta;
+    if (req.voo.dataVolta != null){
+        res.voo.dataVolta = req.body.dataVolta;
     }
 
-    if (req.Voo.horaIda != null){
-        res.Voo.horaIda = req.body.horaIda;
+    if (req.voo.horaIda != null){
+        res.voo.horaIda = req.body.horaIda;
     }
 
-    if (req.Voo.horaVolta != null){
-        res.Voo.horaVolta = req.body.horaVolta;
+    if (req.voo.horaVolta != null){
+        res.voo.horaVolta = req.body.horaVolta;
     }
 
     try {
@@ -82,7 +82,7 @@ router.put('/:id', getVoo, async (req,res,next) =>{
 
 router.delete('/:id', getVoo, async (req, res, next) => {
     try {
-      await res.Voo.deleteOne();
+      await res.voo.deleteOne();
       res.json({ message: 'Voo excluído com sucesso!' });
     } catch (err) {
       res.status(500).json({ message: err.message });
@@ -91,11 +91,11 @@ router.delete('/:id', getVoo, async (req, res, next) => {
   
   async function getVoo(req, res, next) {
     try {
-      const Voo = await Voo.findById(req.params.id);
-      if (Voo == null) {
+      const voo = await Voo.findById(req.params.id);
+      if (voo == null) {
         return res.status(404).json({ message: 'Voo não encontrado' });
       }
-      res.Voo = Voo;
+      res.voo = voo;
       next();
     } catch (err) {
       return res.status(500).json({ message: err.message });
