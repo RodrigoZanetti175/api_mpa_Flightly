@@ -20,8 +20,19 @@ router.get('/', async (req, res, next) => {
 
 // Rota para obter um contato por ID
 
-router.get('/:id',  (req, res, next) => {
-  res.json(res.voo);
+router.get('/:id',  async (req, res, next) => {
+  const { id } = req.params;
+
+  try{
+  const voo = await Voo.findById(id);
+  if(!voo)
+    res.status(404).send({message: "Voo não encontrado"})
+  res.status(200).send({message: "Voo encontrado com sucesso", item: voo})
+  }
+  catch(err)
+  {
+  res.status(400).send({message: err.message})
+  }
 });
 
 router.post('/', async (req, res, next) => {
@@ -43,40 +54,16 @@ router.post('/', async (req, res, next) => {
     }
   });
 
-router.put('/:id',  async (req,res,next) =>{
-    if (req.voo.companhia != null){
-        res.voo.companhia = req.body.companhia;
-    }
-
-    if (req.voo.aeroportoIda != null){
-        res.voo.aeroportoIda = req.body.aeroportoIda;
-    }
-
-    if (req.voo.aeroportoVolta != null){
-        res.voo.aeroportoVolta = req.body.aeroportoVolta;
-    }
-
-    if (req.voo.dataIda != null){
-        res.voo.dataIda = req.body.dataIda;
-    }
-
-    if (req.voo.dataVolta != null){
-        res.voo.dataVolta = req.body.dataVolta;
-    }
-
-    if (req.voo.horaIda != null){
-        res.voo.horaIda = req.body.horaIda;
-    }
-
-    if (req.voo.horaVolta != null){
-        res.voo.horaVolta = req.body.horaVolta;
-    }
-
+router.put('/:id',  async (req,res) =>{
+    const { id } = req.params;
+    const updates = req.body;
     try {
-        const updatedVoo = await res.Voo.save();
-        res.json(updatedVoo);
+        const updatedVoo = await Voo.findByIdAndUpdate(id, updates, { new: true, runValidators: true})
+        if(!updatedVoo)
+          res.status(404).send({message: "Voo não encontrado"})
+        res.status(200).send({message: "Voo alterado com sucesso", item: updatedVoo})
       } catch (err) {
-        res.status(400).json({ message: err.message });
+        res.status(500).json({ message: err.message });
       }
 });
 
@@ -92,18 +79,5 @@ router.delete('/:id',  async (req, res) => {
       res.status(500).json({ message: err.message });
     }
   });
-  
-  // async function getVoo(req, res, next) {
-  //   try {
-  //     const voo = await Voo.findById(req.params.id);
-  //     if (voo == null) {
-  //       return res.status(404).json({ message: 'Voo não encontrado' });
-  //     }
-  //     res.voo = voo;
-  //     next();
-  //   } catch (err) {
-  //     return res.status(500).json({ message: err.message });
-  //   }
-  // }
   
   module.exports = router;
