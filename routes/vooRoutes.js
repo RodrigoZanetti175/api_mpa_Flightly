@@ -20,7 +20,7 @@ router.get('/', async (req, res, next) => {
 
 // Rota para obter um contato por ID
 
-router.get('/:id', getVoo, (req, res, next) => {
+router.get('/:id',  (req, res, next) => {
   res.json(res.voo);
 });
 
@@ -43,7 +43,7 @@ router.post('/', async (req, res, next) => {
     }
   });
 
-router.put('/:id', getVoo, async (req,res,next) =>{
+router.put('/:id',  async (req,res,next) =>{
     if (req.voo.companhia != null){
         res.voo.companhia = req.body.companhia;
     }
@@ -80,26 +80,30 @@ router.put('/:id', getVoo, async (req,res,next) =>{
       }
 });
 
-router.delete('/:id', getVoo, async (req, res, next) => {
-    try {
-      await res.voo.deleteOne();
-      res.json({ message: 'Voo excluído com sucesso!' });
+router.delete('/:id',  async (req, res) => {
+  const { id } = req.params;  
+  try {
+      const deletedVoo = await Voo.findByIdAndDelete(id)
+
+      if(!deletedVoo)
+        return res.status(404).send({ message: 'Voo não encontrado'})
+      res.status(200).send({ message: 'Voo excluído com sucesso!', item: deletedVoo });
     } catch (err) {
       res.status(500).json({ message: err.message });
     }
   });
   
-  async function getVoo(req, res, next) {
-    try {
-      const voo = await Voo.findById(req.params.id);
-      if (voo == null) {
-        return res.status(404).json({ message: 'Voo não encontrado' });
-      }
-      res.voo = voo;
-      next();
-    } catch (err) {
-      return res.status(500).json({ message: err.message });
-    }
-  }
+  // async function getVoo(req, res, next) {
+  //   try {
+  //     const voo = await Voo.findById(req.params.id);
+  //     if (voo == null) {
+  //       return res.status(404).json({ message: 'Voo não encontrado' });
+  //     }
+  //     res.voo = voo;
+  //     next();
+  //   } catch (err) {
+  //     return res.status(500).json({ message: err.message });
+  //   }
+  // }
   
   module.exports = router;
